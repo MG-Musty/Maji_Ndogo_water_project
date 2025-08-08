@@ -96,8 +96,21 @@ Gives the table below:
  
 Yeah, so this is a list of `location_id, source_id, record_id,` and a date and time, so it makes sense that someone `(assigned_employee_id)` visited some location `(location_id)` at some time `(time_of_record )` and found a `'source'` there `(source_id)`. Often the `"_id"` columns are related to another table. In this case, the `source_id` in the visits table refers to `source_id` in the `water_source` table. This is what we call a `foreign key`, but we'll get more into this next time.
 
+Ok, so let's look at the `water_source` table to see what a `'source'` is. Normally `"_id"` columns are related to another table.
+
+ ```
+SELECT
+     *
+FROM
+     md_water_services.water_source;
+```
+
+Gives the table below:
+
+>| source_id | tap_in_home | type_of_water_source | number_of_people_served |
+
+>| AkHa00000224 | tap_in_home | 956 |
+
+>| AkHa00001224 | tap_in_home_broken | 930 |
 
 
-
-
- 
