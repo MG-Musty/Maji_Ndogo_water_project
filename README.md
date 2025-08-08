@@ -31,4 +31,73 @@ In this project I exhibited my `SQL (Structure Query Language)` skills creating 
 
 By working through these tasks, I'll not only be answering the solution to Maji_Ndogo problems but also to explore the database and extract meaningful insights, but I'll also be honing my SQL skills. It's a win-win situation! 
 
+# Processing the data
 
+1. **Get to know our data:**
+   
+   Start by retrieving the first few records from each table. How many tables are there in our database? What are the names of these ta bles? Once you've identified the tables, write a `SELECT` statement to retrieve the first five records from each table. As you look at the data, take note of the columns and their respective data types in each table. What information does each table contain?  but when you access a new database in MySQL, a handy initial query to run is `SHOW TABLES`.
+
+```
+SHOW TABLES;
+```
+ This will give you a list of all the tables in the database:
+ 
+>| **Tables_in_md_water_services_student** |
+
+>| data_dictionary |
+
+>| employee |
+
+>| global_water_access |
+
+>| location |
+
+>| water_quality |
+
+>| visits |
+
+>| water_source |
+
+>| well_pollution |
+
+So let's have a look at one of these tables, Let's use `location` so we can use that killer query, `SELECT *` but I have to limit it and tell it which table we are looking at.
+
+```
+SELECT
+     *
+FROM
+     md_water_services.location;
+```
+
+Gives the table below:
+
+>| location_id | address |  province_name | town_name | location_type |
+
+>| AkHa00000 | 2 Addis Ababa Road | Akatsi | Harare | Urban |
+
+ So we can see that this table has information on a specific location, with an address, the province and town the location is in, and if it's in a city `(Urban)` or not. We can't really see what location this is but we can see some sort of identifying number of that location.
+
+ Ok, so let's look at the visits table.
+
+ ```
+SELECT
+     *
+FROM
+     md_water_services.visits;
+```
+
+Gives the table below:
+
+>| record_id | location_id | source_id | time_of_record | visit_count | time_in_queue | assigned_employee_id |
+
+>| 0 | SoIl32582 | SoIl32582224 | 2021-01-01 09:10:00 | 1 | 15 | 12 |
+
+>| 1 | KiRu28935 |  KiRu28935224 | 2021-01-01 09:17:00 | 1 | 0 | 46 |
+ 
+Yeah, so this is a list of `location_id, source_id, record_id,` and a date and time, so it makes sense that someone `(assigned_employee_id)` visited some location `(location_id)` at some time `(time_of_record )` and found a `'source'` there `(source_id)`. Often the `"_id"` columns are related to another table. In this case, the `source_id` in the visits table refers to `source_id` in the `water_source` table. This is what we call a `foreign key`, but we'll get more into this next time.
+
+
+
+
+
+ 
