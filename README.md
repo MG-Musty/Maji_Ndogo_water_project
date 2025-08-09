@@ -113,4 +113,145 @@ Gives the table below:
 
 >| AkHa00001224 | tap_in_home_broken | 930 |
 
+ 2. **Dive into the water sources:**
+
+    Now that you're familiar with the structure of the tables, let's dive deeper. We need to understand the types of water sources we're dealing with. Let's figure out which table contains this information?
+
+We start by finding all the unique types of water sources.
+
+```
+SELECT DISTINCT
+	type_of_water_source 
+FROM 
+	md_water_services.water_source;
+```
+
+ So I get this when I run it:
+ 
+ >| type_of_water_source |
+
+ >| tap_in_home |
+ 
+ >| tap_in_home_broken |
+ 
+ >| river |
+ 
+ >| well |
+ 
+ >| shared_tap |
+
+1. **River** - People collect drinking water along a river. This is an open water source that millions of people use in Maji Ndogo. Water from a river has a high risk of being contaminated with biological and other pollutants, so it is the worst source of water possible.
+
+![River water Maji](https://github.com/user-attachments/assets/4b6dce50-72c1-492f-9dce-3917ac760014)
+
+This is a river in the province of Sokoto:
+
+2. **Well** - These sources draw water from underground sources, and are commonly shared by communities. Since these are closed water sources, contamination is much less likely compared to a river. Unfortunately, due to the aging infrastructure and the corruption of officials in the past, many of our wells are not clean.
+
+![Well water Maji](https://github.com/user-attachments/assets/da3f733b-1ee6-4f38-b406-74b59ccd4d48)
+
+This well is at 146 Okapi Road, in my home town of Yaounde:
+
+3. **Shared tap** - This is a tap in a public area shared by communities.
+
+![Shared-tap Maji](https://github.com/user-attachments/assets/7f6e31d8-fe01-4292-a7e9-11872ab8974a)
+
+This is a shared tap from 18 Twiga Lane, Hawassa, that serves about 2700 people:
+
+4. **Tap in home** - These are taps that are inside the homes of our citizens. On average about 6 people live together in Maji Ndogo, so
+ each of these taps serves about 6 people.
+
+![Tap-in-home Maji](https://github.com/user-attachments/assets/4f1b64cd-cb3f-401f-901b-f52d0c636d13)
+
+This is a tap in my uncle's home in the capital city, Dahabu:
+
+5. **Broken tap in home** - These are taps that have been installed in a citizen’s home, but the infrastructure connected to that tap is not
+ functional. This can be due to burst pipes, broken pumps or water treatment plants that are not working.
+
+![Broken-tap-in-home Maji](https://github.com/user-attachments/assets/53a31486-58c8-4bba-8236-5b249f4e8e42)
+
+This is a water treatment plant in the town of Kintampo that serves about 1000 people:
+
+3. **Unpack the visits to water sources:**
+   
+ We have a table in our database that logs the visits made to different water sources. Lets identify this table.
+
+Let's write a query that retrieves all records from this table where the time_in_queue is more than some crazy time, say 500 min. How would it feel to queue 8 hours for water?
+
+ ```
+SELECT
+     *
+FROM
+    visits
+WHERE
+    time_in_queue > 500;
+```
+
+The following columns will display with the their values each:
+
+>| record_id | location_id | source_id | time_of_record | visit_count | time_in_queue | assigned_employee_id |
+
+After running the above query I discover that some water source took more than a 8hrs waiting on the queue only to get water from that source.  How is this possible? Can you imagine queueing 8 hours for water?
+
+4. **Assess the quality of water sources:**
+
+ The quality of our water sources is the whole point of this survey. We have a table that contains a quality score for each visit made about a water source that was assigned by a Field surveyor. They assigned a score to each source from 1, being terrible, to 10 for a good, clean water source in a home. Shared taps are not rated as high, and the score also depends on how long the queue times are.
+
+I will write a query to find records where the `subject_quality_score` is 10-- only looking for home taps-- and where the source was visited a second time.
+
+```
+SELECT
+     *
+FROM
+     water_quality
+WHERE
+     subject_quality_score = 10
+  AND source = 'home tap'
+  AND visit_count >= 2;
+```
+
+We get the columns below:
+
+>| record_id | subjective_quality_score | visit_count |
+
+5. **Investigate pollution issues:**
+
+There was a table that recorded contamination/pollution data for all of the well sources? I will display the table with the first few rows.
+
+```
+SELECT
+     *
+FROM
+    md_water_services.well_pollution;
+```
+
+Display the columns with values:
+
+>| source_id | date | description | pollutant_ppm | biological | results |
+
+ In the well pollution table, the descriptions are notes taken by our scientists as text, so it will be challenging to process it. The biological column is in units of CFU/mL, so it measures how much contamination is in the water. 0 is clean, and anything more than 0.01 is contaminated.
+Let's check the integrity of the data. The worst case is if we have contamination, but we think we don't. People can get sick, so we need to make sure there are no errors here.
+
+Lets write a query that checks if the results is Clean but the biological column is > 0.01.
+
+```
+SELECT 
+     *
+FROM
+ 	  well_pollution
+WHERE
+    results = 'Clean'
+    AND biological > 0.01;
+```
+
+Gives the below table:
+
+>| source_id | date | description | pollutant_ppm | biological | results |
+
+>| AkRu08936224 | 2021-01-08 09:22:00 | Bacteria: E. coli | 0.0406458 |35.0068 | Clean |
+
+
+
+
+
 
