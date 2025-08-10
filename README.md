@@ -404,7 +404,23 @@ From this table, it's pretty clear that most of the water sources in the survey 
 
  Finally, look at the number of records for each location type:
 
- 
+```
+SELECT 
+    location_type,
+    COUNT(*) AS num_sources
+FROM 
+    md_water_services.location
+GROUP BY 
+    location_type
+ORDER BY 
+    num_sources DESC;
+```
+
+>| location_type | num_sources |
+
+>| Rural | 23740 |
+
+>| Urban | 15910 |
 
 
 
