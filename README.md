@@ -148,27 +148,27 @@ This is a river in the province of Sokoto:
 
 2. **Well** - These sources draw water from underground sources, and are commonly shared by communities. Since these are closed water sources, contamination is much less likely compared to a river. Unfortunately, due to the aging infrastructure and the corruption of officials in the past, many of our wells are not clean.
 
-![Well water Maji](https://github.com/user-attachments/assets/da3f733b-1ee6-4f38-b406-74b59ccd4d48)
+	![Well water Maji](https://github.com/user-attachments/assets/da3f733b-1ee6-4f38-b406-74b59ccd4d48)
 
 This well is at 146 Okapi Road, in my home town of Yaounde:
 
 3. **Shared tap** - This is a tap in a public area shared by communities.
 
-![Shared-tap Maji](https://github.com/user-attachments/assets/7f6e31d8-fe01-4292-a7e9-11872ab8974a)
+	![Shared-tap Maji](https://github.com/user-attachments/assets/7f6e31d8-fe01-4292-a7e9-11872ab8974a)
 
 This is a shared tap from 18 Twiga Lane, Hawassa, that serves about 2700 people:
 
 4. **Tap in home** - These are taps that are inside the homes of our citizens. On average about 6 people live together in Maji Ndogo, so
  each of these taps serves about 6 people.
 
-![Tap-in-home Maji](https://github.com/user-attachments/assets/4f1b64cd-cb3f-401f-901b-f52d0c636d13)
+	![Tap-in-home Maji](https://github.com/user-attachments/assets/4f1b64cd-cb3f-401f-901b-f52d0c636d13)
 
 This is a tap in my uncle's home in the capital city, Dahabu:
 
 5. **Broken tap in home** - These are taps that have been installed in a citizen’s home, but the infrastructure connected to that tap is not
  functional. This can be due to burst pipes, broken pumps or water treatment plants that are not working.
 
-![Broken-tap-in-home Maji](https://github.com/user-attachments/assets/53a31486-58c8-4bba-8236-5b249f4e8e42)
+	![Broken-tap-in-home Maji](https://github.com/user-attachments/assets/53a31486-58c8-4bba-8236-5b249f4e8e42)
 
 This is a water treatment plant in the town of Kintampo that serves about 1000 people:
 
@@ -249,6 +249,162 @@ Gives the below table:
 >| source_id | date | description | pollutant_ppm | biological | results |
 
 >| AkRu08936224 | 2021-01-08 09:22:00 | Bacteria: E. coli | 0.0406458 |35.0068 | Clean |
+
+# Maji_Ndogo_water_project_part_1
+
+As we know that having a data there will be some inconsistence that come either through wrongly records or errors from the surveyors that took the records of all the datas inputted.
+
+1. **Cleaning our data**
+
+ 	Updating Employee data, bring up the employee table. It has info on all of the workers, but note that the email addresses have not been added. We will have to send them reports and figures, so let's update it. Luckily the emails for our department are easy: `first_name.last_name@ndogowater.gov.`
+
+Bring up employee table:
+
+```
+SELECT
+	*
+FROM
+	md_water_services.employee;
+```
+
+The above will display employee table.
+
+>| assigned_employee_id | employee_name | phone_number | email | address | province_name | town_name | position |
+
+>| 0 | Amara Jengo | +99637993287 | NULL | 36 Pwani Mchangani Road | 'Sokoto | Ilanga | Field Surveyor |
+
+I have to update the database again with these email addresses, so before we do, let's use a `SELECT` query to get the format right, then use `UPDATE` and `SET` to make the changes.
+
+- First up, let's remove the space between the first and last names using REPLACE().
+
+- Then we can use LOWER() with the result we just got. Now the name part is correct.
+
+- We then use CONCAT() to add the rest of the email address:
+
+```
+SELECT
+	*,
+	CONCAT(
+	LOWER(REPLACE(employee_name, ' ', '.')), '@ndogowater.gov') AS new_email
+FROM
+	md_water_services.employee;
+```
+
+It will gives the below:
+
+>| assigned_employee_id | employee_name | phone_number | address | province_name | town_name | position | new_email |
+
+>| 0 | Amara Jengo | +99637993287 | 36 Pwani Mchangani Road | Sokoto | Ilanga | Field Surveyor | amara.jengo@ndogowater.gov |
+
+>| 1 | Bello Azibo | +99643864786 |	129 Ziwa La Kioo Road | Kilimani | Rural | Field Surveyor | bello.azibo@ndogowater.gov |
+
+I go ahead and UPDATE the email column this time with the email addresses.
+
+Fisrt we have to add the following code line `SET SQL_SAFE_UPDATES = 0;` cause we need to let MYSQL server know that is safe for us to update the table:
+
+```
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE md_water_services.employee
+SET email = CONCAT(LOWER(REPLACE(employee_name, ' ', '.')),
+'@ndogowater.gov')
+```
+Then run the SELECT query you get the  below:
+
+>| assigned_employee_id | employee_name | phone_number | email, address | province_name | town_name | position |
+
+>|0 | Amara Jengo | +99637993287 | amara.jengo@ndogowater.gov | 36 Pwani Mchangani Road | Sokoto | Ilanga | Field Surveyor |
+
+I picked up another bit we have to clean up. I discover that the `phone_number` column the phone numbers should be 12 characters long, consisting of the plus sign, area code (99), and the phone number digits. However, when we use the `LENGTH(column)` function, the below returns 13 characters, indicating there's an extra character.
+
+```
+ SELECT
+ 	LENGTH(phone_number)
+ FROM
+ 	employee;
+```
+
+I Use TRIM() to write a SELECT query again:
+
+```
+SELECT
+	TRIM(LENGTH('phone_number')) AS Trimmed_number
+FROM
+	md_water_services.employee;
+```
+
+I go ahead and UPDATE the `phone_number` column, use the following code line `SET SQL_SAFE_UPDATES = 0;` cause we need to let MYSQL server know that is safe for us to update the table:
+
+```
+UPDATE md_water_services.employee
+SET phone_number = TRIM(phone_number);
+```
+
+>| assigned_employee_id | employee_name | phone_number | email, address | province_name | town_name | position |
+
+>|0 | Amara Jengo | +99637993287 | amara.jengo@ndogowater.gov | 36 Pwani Mchangani Road | Sokoto | Ilanga | Field Surveyor |
+
+2. ** Analysing locations**
+
+Looking at the location table, let’s focus on the `province_name, town_name and location_type` to understand where the water sources are in Maji Ndogo.
+
+I created a query that counts the number of records per town:
+
+```
+SELECT 
+    town_name,
+    COUNT(*) AS records_per_town
+FROM 
+    md_water_services.location
+GROUP BY 
+    town_name;
+```
+
+It gives the below table:
+
+>| town_name | records_per_town|
+
+>| Harare | 1650 |
+
+>| Kintampo | 780 |
+
+>| Lusaka | 1070 |
+
+>| Rural | 23740 |
+
+>| Abidjan | 400 |
+
+>| Amina | 1090 |
+
+Also counted the records per province:
+
+```
+SELECT 
+    province_name,
+    COUNT(*) AS records_per_province
+FROM 
+    md_water_services.location
+GROUP BY 
+    province_name;
+```
+
+>| province_name | records_per_province |
+
+>| Akatsi | 8940 |
+
+>| Amanzi | 6950 |
+
+>| Hawassa | 6030 |
+
+>| Kilimani | 9510 |
+
+>| Sokoto | 8220 |
+
+From this table, it's pretty clear that most of the water sources in the survey are situated in small rural communities, scattered across Maji Ndogo.  If we count the records for each province, most of them have a similar number of sources, so every province is well-represented in the survey.
+
+ Finally, look at the number of records for each location type:
+
+ 
 
 
 
