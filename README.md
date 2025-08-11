@@ -422,6 +422,133 @@ ORDER BY
 
 >| Urban | 15910 |
 
+4. **Diving into the sources**
+
+   Now we need to know the following through deeping more into the `water_source` table;
+
+These are the questions that I am curious about.
+ 
+ 1. How many people did we survey in total?
+ 	
+ 2. How many wells, taps and rivers are there?
+ 
+ 3. How many people share particular types of water sources on average?
+ 
+ 4. How many people are getting water from each type of source?
+
+1. How many people did we survey in total?
+
+```
+SELECT 
+    SUM(number_of_people_served) AS total_people_served
+FROM 
+    md_water_services.water_source;
+```
+
+>| total_people_served |
+
+>| 27628140 |
+
+2. How many wells, taps and rivers are there?
+
+```
+SELECT 
+    type_of_water_source,
+    COUNT(*) AS number_of_sources
+FROM 
+    md_water_services.water_source
+GROUP BY
+	type_of_water_source;
+```
+
+>| type_of_water_source | number_of_sources |
+
+>| tap_in_home | 7265 |
+
+>| tap_in_home_broken | 5856 |
+
+>| well | 17383 |
+
+>| shared_tap | 5767 |
+
+>| river | 3379 |
+
+Which of those sources stands out? It is pretty clear that although there was a drought, water is still abundant in Maji Ndogo. This isn't just aninformative result, we will need these numbers to understand how much all of these repairs will cost. If we know how many taps we need to install, and we know how much it will cost to install them, we can calculate how much it will cost to solve the water crisis.
+
+3. How many people share particular types of water sources on average?
+
+```
+SELECT 
+    type_of_water_source,
+    ROUND(AVG(number_of_people_served), 0) AS avg_people_per_source
+FROM 
+    md_water_services.water_source
+GROUP BY 
+    type_of_water_source;
+```
+
+>| type_of_water_source | avg_people_per_source |
+
+>| tap_in_home | 644 |
+
+>| tap_in_home_broken | 649 |
+
+>| well | 279 |
+
+>| shared_tap | 2071 |
+
+>| river | 699 |
+
+These results are telling us that 644 people share a tap_in_home on average. Does that make sense?
+
+The surveyors combined the data of many households together and added this as a single tap record, but each household actually has its own tap. In addition to this, there is an average of 6 people living in a home. So 6 people actually share 1 tap (not 644).
+ 
+Calculating the average number of people served by a single instance of each water source type helps us understand the typical capacity or load on a single water source. This can help us decide which sources should be repaired or upgraded, based on the average impact of each upgrade. For example, wells don't seem to be a problem, as fewer people are sharing them.
+
+On the other hand, 2000 share a single public tap on average! We saw some of the queue times last time, and now we can see why. So looking at these results, we probably should focus on improving shared taps first.
+
+4. How many people are getting water from each type of source?
+
+```
+SELECT 
+    type_of_water_source,
+    SUM(number_of_people_served) AS population_served
+FROM 
+    md_water_services.water_source
+GROUP BY 
+    type_of_water_source;
+```
+
+>| type_of_water_source | population_served |
+
+>| tap_in_home | 4678880 |
+
+>| tap_in_home_broken | 3799720 |
+
+>| well | 4841724 |
+
+>| shared_tap | 11945272 |
+
+>| river | 2362544 |
+
+It's a little hard to comprehend these numbers, but you can see that one of these is dominating. To make it a bit simpler to interpret, let's use percentages. First, we need the total number of citizens then use the result of that and divide each of the SUM(number_of_people_served) by that number, times 100, to get percentages.
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
