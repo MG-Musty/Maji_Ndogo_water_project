@@ -4,6 +4,21 @@ Maji_Ndogo water project is a water project of a small nation that is face with 
 
 In this project I exhibited my `SQL (Structure Query Language)` skills creating a MYSQL database server using open source software for MySql, and I was able to `import, retrieve, manipulate, wrangling and creating ERD (Entity Relational Diagram)` with all of this some great insight for this project was achieved.
 
+# Queries Functions used
+
+* SELECT
+* UPDATE
+* SET
+* LOWER
+* UPPER
+* COUNT
+* RANK
+* AVERAGE
+* ORDER
+* WHERE
+* AS
+* WITH E.T.C.
+
 # Get to know our data
 
  As a Data Analyst, I've taken a close look at Dataset and have broken it down into a series of tasks that I need to tackle. So, let's roll up our sleeves and get started.
@@ -534,16 +549,44 @@ GROUP BY
 It's a little hard to comprehend these numbers, but you can see that one of these is dominating. To make it a bit simpler to interpret, let's use percentages. First, we need the total number of citizens then use the result of that and divide each of the SUM(number_of_people_served) by that number, times 100, to get percentages.
 
 ```
+SELECT 
+    type_of_water_source,
+    ROUND((SUM(number_of_people_served) / 27000000) * 100, 0) AS percentage_people_per_source
+FROM 
+    md_water_services.water_source
+GROUP BY 
+    type_of_water_source;
+```
 
+>| type_of_water_source | percentage_people_per_source |
 
+>| tap_in_home | 17 |
 
+>| tap_in_home_broken | 14 |
 
+>| well | 18 |
 
+>| shared_tap | 44 |
 
+>| river | 9 |
 
+44% of our people are using shared taps in their communities, and on average, we saw earlier, that 2000 people share one shared_tap.
 
+By adding tap_in_home and tap_in_home_broken together, we see that 31% of people have water infrastructure installed in their homes, but 45% (14/31) of these taps are not working! This isn't the tap itself that is broken, but rather the infrastructure like treatment plants, reservoirs, pipes, and pumps that serve these homes that are broken.
+18% of people are using wells. But only 4916 out of 17383 are clean = 28% (from last week).
 
+5. **Start of a solution**
+ 	At some point, we will have to fix or improve all of the infrastructure, so we should start thinking about how we can make a data-driven decision how to do it. I think a simple approach is to fix the things that affect most people first. So let's write a query that ranks each type of source based on how many people in total use it. RANK() should tell you we are going to need a window function to do this, so let's think through the problem.
 
+We will need the following columns:
+
+- Type of sources
+
+- Total people served grouped by the types
+
+- A rank based on the total people served, grouped by the types
+
+So use a window function on the total people served column, converting it into a rank.
 
 
 
