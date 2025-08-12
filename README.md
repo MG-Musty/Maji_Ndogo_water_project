@@ -2,7 +2,7 @@
 
 ![River water Maji](https://github.com/user-attachments/assets/e90c62f4-ae1c-4c3c-ac9f-798ed87e2034)
 
-Maji_Ndogo water project is a water project of a small nation that is face with water scarcity, uncleaned water, contaminated water. In this project we will be looking on how to solve and provide very insightful decision for the nation, which will deliver a permanent solution through  a database of 60,000 records, meticulously collected by the devoted team of engineers, field workers, scientists, and analysts.
+**Maji_Ndogo water project** is a water project of a small nation that is face with water scarcity, uncleaned water, contaminated water. In this project we will be looking on how to solve and provide very insightful decision for the nation, which will deliver a permanent solution through  a database of 60,000 records, meticulously collected by the devoted team of engineers, field workers, scientists, and analysts.
 
 In this project I exhibited my `SQL (Structure Query Language)` skills creating a MYSQL database server using open source software for MySql, and I was able to `import, retrieve, manipulate, wrangling and creating ERD (Entity Relational Diagram)` with all of this some great insight for this project was achieved.
 
