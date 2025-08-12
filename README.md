@@ -272,7 +272,7 @@ Gives the below table:
 
 >| AkRu08936224 | 2021-01-08 09:22:00 | Bacteria: E. coli | 0.0406458 |35.0068 | Clean |
 
-# Maji_Ndogo_water_project_part_1
+# Maji_Ndogo_water_project_part_2
 
 As we know that having a data there will be some inconsistence that come either through wrongly records or errors from the surveyors that took the records of all the datas inputted.
 
