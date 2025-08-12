@@ -904,7 +904,7 @@ To take it one step further, I made a graph! If you copy the pivot table into a 
 
 The colors represent the hours of the day, and each bar is the average queue time, for that specific hour and day.
 
-**Water Accessibility and infrastructure summary report**
+# Water Accessibility and infrastructure summary report
 
 This survey aimed to identify the water sources people use and determine both the total and average number of users for each source.
 
