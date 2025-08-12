@@ -7,6 +7,7 @@ In this project I exhibited my `SQL (Structure Query Language)` skills creating 
 # Queries Functions used
 
 * SELECT
+* FROM
 * UPDATE
 * SET
 * LOWER
@@ -17,6 +18,8 @@ In this project I exhibited my `SQL (Structure Query Language)` skills creating 
 * ORDER
 * WHERE
 * AS
+* OVER
+* PARTITION
 * WITH E.T.C.
 
 # Get to know our data
@@ -586,7 +589,81 @@ We will need the following columns:
 
 - A rank based on the total people served, grouped by the types
 
-So use a window function on the total people served column, converting it into a rank.
+So use a window function on the `total_people_served` column, converting it into a rank.
+
+But think about this: If someone has a tap in their home, they already have the best source available. Since we can’t do anything more to improve this, we should remove `tap_in_home` from the ranking before we continue.
+
+>| type_of_water_source | total_people_served | rank_by_population |
+
+>| shared_tap | 11945272 | 1 |
+
+>| well | 4841724 | 2 |
+
+>| tap_in_home | 4678880 | 3 |
+
+>| tap_in_home_broken | 3799720 | 4 |
+
+>| river | 2362544 | 5 |
+
+Ok, so we should fix shared taps first, then wells, and so on. But the next question is, which shared taps or wells should be fixed first? We can use the same logic; the most used sources should really be fixed first.
+
+So let's create a query to do this, and keep these requirements in mind:
+
+	1. The sources within each type should be assigned a rank.
+ 
+	2. Limit the results to only improvable sources.
+ 
+	3. Think about how to partition, filter and order the results set.
+ 
+	4. Order the results to see the top of the list.
+
+```
+SELECT 
+    source_id,
+    type_of_water_source,
+    number_of_people_served,
+    RANK() OVER (
+        PARTITION BY type_of_water_source
+        ORDER BY number_of_people_served DESC
+    ) AS priority_rank
+FROM 
+    md_water_services.water_source
+WHERE 
+    type_of_water_source IN ('shared_tap', 'river')  -- improvable sources
+ORDER BY 
+    type_of_water_source,
+    priority_rank;
+```
+
+>| source_id | type_of_water_source | number_of_people_served | priority_rank |
+
+>|  AmRu14978224 | river | 400 | 3364 |
+
+>| HaDj16848224 | river | 400 | 3364 |
+
+>| AkRu06515224 | shared_tap | 200 | 5764 |
+
+>| SoRu36937224 | shared_tap | 200 | 5764 |
+
+By using `RANK()` teams doing the repairs can use the value of rank to measure how many they have fixed.
+
+6. **Analysing queues**
+
+Ok, this is the really big, and last table we'll look at this time. The analysis is going to be a bit tough, but the results will be worth it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
