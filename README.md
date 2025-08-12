@@ -20,6 +20,10 @@ In this project I exhibited my `SQL (Structure Query Language)` skills creating 
 * AS
 * OVER
 * PARTITION
+* DATETIME
+* NULLIF
+* IS NOT NULL
+* JOIN
 * WITH E.T.C.
 
 # Get to know our data
@@ -651,23 +655,318 @@ By using `RANK()` teams doing the repairs can use the value of rank to measure h
 
 Ok, this is the really big, and last table we'll look at this time. The analysis is going to be a bit tough, but the results will be worth it.
 
+**A recap from last time:**
 
+The `visits` table documented all of the visits our field surveyors made to each location. For most sources, one visit was enough, but if there were queues, they visited the location a couple of times to get a good idea of the time it took for people to queue for water. So we have the time that they collected the data, how many times the site was visited, and how long people had to queue for water.
 
+Ok, these are some of the things I think are worth looking at:
 
+	 1. How long did the survey take?
+  
+	 2. What is the average total queue time for water?
+  
+	 3. What is the average queue time on different days?
+  
+	 4. How can we communicate this information efficiently?
 
+**Question 1:**
 
+To calculate how long the survey took, we need to get the first and last dates (which functions can find the largest/smallest value), and subtract them. Remember with DateTime data, we can't just subtract the values. We have to use a function to get the difference in days.
 
+```
+SELECT 
+    MIN(time_of_record) AS first_date,
+    MAX(time_of_record) AS last_date,
+    DATEDIFF(MAX(time_of_record), MIN(time_of_record)) AS survey_difference_in_days
+FROM 
+    md_water_services.visits;
+```
 
+>| first_date | last_date | survey_difference_in_days |
 
+>| 2021-01-01 09:10:00 | 2023-07-14 13:53:00 | 924 |
 
+**Question 2:**
 
+Let's see how long people have to queue on average in Maji Ndogo. Keep in mind that many sources like taps_in_home have no queues. These are just recorded as 0 in the time_in_queue column, so when we calculate averages, we need to exclude those rows. Try using `NULLIF()` do to this.
 
+```
+SELECT 
+    AVG(NULLIF(time_in_queue, 0)) AS avg_time_in_queue
+FROM 
+    md_water_services.visits;
+```
 
+>| avg_time_in_queue |
 
+>| 123.2574 |
 
+I should get a queue time of about 123 min. So on average, people take two hours to fetch water if they don't have a tap in their homes.
 
+That may sound reasonable, but some days might have more people who need water, and only have time to go and collect some on certain days.
 
+**Question 3:**
 
+So let's look at the queue times aggregated across the different days of the week.
+
+`DAY()` gives you the day of the month. It we want to aggregate data for each day of the week, we need to use another `DateTime` function, `DAYNAME(column)`. As the name suggests, it returns the day from a timestamp as a string. Using that on the `time_of_record` column will result in a column with day names, Monday, Tuesday, etc., from the timestamp.
+
+To do this, we need to calculate the average queue time, grouped by day of the week. Remember to revise DateTime functions, and also think about how to present the results clearly.
+
+```
+SELECT 
+    DAYNAME(time_of_record) AS day_of_week,
+    ROUND(AVG(NULLIF(time_in_queue, 0)), 0) AS avg_time_in_queue
+FROM 
+    md_water_services.visits
+GROUP BY 
+    day_of_week
+ORDER BY 
+    FIELD(day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+```
+
+>| day_of_week | avg_time_in_queue |
+
+>| Monday | 137 |
+
+>| Tuesday | 108 |
+
+>| Wednesday | 97 |
+
+>| Thursday | 105 |
+
+>| Friday | 120 |
+
+>| Saturday | 246 |
+
+>| Sunday | 82 |
+
+Wow, ok Saturdays have much longer queue times compared to the other days!
+
+**Question 4:**
+
+We can also look at what time during the day people collect water. 
+
+```
+SELECT 
+    TIME_FORMAT(TIME(time_of_record), '%H:00') AS hour_of_day,
+    COUNT(time_in_queue) AS avg_queue_time
+FROM 
+    md_water_services.visits
+GROUP BY 
+    hour_of_day
+ORDER BY 
+    hour_of_day;
+```
+
+>| hour_of_day | avg_queue_time |
+
+>| 06:00 | 1528 |
+
+>| 07:00 | 1592 |
+
+>| 08:00 | 1620 |
+
+>| 09:00 | 6555 |
+
+>| 10:00 | 6502 |
+
+>| 11:00 | 6517 |
+
+>| 12:00 | 6463 |
+
+>| 13:00 | 6648 |
+
+>| 14:00 | 6576 |
+
+>| 15:00 | 6420 |
+
+>| 16:00 | 6494 |
+
+>| 17:00 | 1574 |
+
+>| 18:00 | 1620 |
+
+>| 19:00 | 37 |
+
+Can you see that mornings and evenings are the busiest? It looks like people collect water before and after work. Wouldn't it be nice to break down the queue times for each hour of each day? In a spreadsheet, we can just create a pivot table.
+
+Pivot tables are not widely used in SQL, despite being useful for interpreting results. So there are no built-in functions to do this for us. Sometimes the dataset is just so massive that it is the only option.
+
+For rows, we will use the hour of the day in that nice format, and then make each column a different day!
+
+To filter a row we use `WHERE`, but using `CASE()` in `SELECT` can filter columns. We can use a `CASE()` function for each day to separate the queue time column into a column for each day. Let’s begin by only focusing on Sunday. So, when a row's `DAYNAME(time_of_record)` is Sunday, we make that value equal to `time_in_queue`, and `NULL` for any days.
+
+We create separate columns for each day with a `CASE()` function.
+
+```
+/*
+We create separate columns for each day with a CASE() function.
+Ok, so here's your challenge: Fill out the query for the rest of the days, and run it. Make sure to specify the day in the CASE() function, and the
+alias.
+*/
+
+SELECT
+    TIME_FORMAT(TIME(time_of_record), '%H:00') AS hour_of_day,
+
+    -- Sunday
+    ROUND(AVG(CASE
+        WHEN DAYNAME(time_of_record) = 'Sunday' THEN time_in_queue
+        ELSE NULL
+    END), 0) AS Sunday,
+
+    -- Monday
+    ROUND(AVG(CASE
+        WHEN DAYNAME(time_of_record) = 'Monday' THEN time_in_queue
+        ELSE NULL
+    END), 0) AS Monday,
+
+    -- Tuesday
+    ROUND(AVG(CASE
+        WHEN DAYNAME(time_of_record) = 'Tuesday' THEN time_in_queue
+        ELSE NULL
+    END), 0) AS Tuesday,
+
+    -- Wednesday
+    ROUND(AVG(CASE
+        WHEN DAYNAME(time_of_record) = 'Wednesday' THEN time_in_queue
+        ELSE NULL
+    END), 0) AS Wednesday,
+
+    -- Thursday
+    ROUND(AVG(CASE
+        WHEN DAYNAME(time_of_record) = 'Thursday' THEN time_in_queue
+        ELSE NULL
+    END), 0) AS Thursday,
+
+    -- Friday
+    ROUND(AVG(CASE
+        WHEN DAYNAME(time_of_record) = 'Friday' THEN time_in_queue
+        ELSE NULL
+    END), 0) AS Friday,
+
+    -- Saturday
+    ROUND(AVG(CASE
+        WHEN DAYNAME(time_of_record) = 'Saturday' THEN time_in_queue
+        ELSE NULL
+    END), 0) AS Saturday
+
+FROM
+    visits
+WHERE
+    time_in_queue != 0 -- Exclude sources like tap_in_home with no queue
+
+GROUP BY
+    hour_of_day
+ORDER BY
+    hour_of_day;
+```
+
+>| hour_of_day | Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday |
+
+>| 06:00 | 79 | 190 | 134 | 112 | 134 | 153 | 247 |
+
+>| 07:00 | 82 | 186 | 128 | 111 | 139 | 156 | 247 |
+
+>| 08:00 | 86 | 183 | 130 | 119 | 129 | 153 | 247 |
+
+>| 09:00 | 84 | 127 | 105 | 94 | 99 | 107 | 252 |
+
+>| 10:00 | 83 | 119 | 99 | 89 | 95 | 112 | 259 |
+
+>| 11:00 | 78 | 115 | 102 | 86 | 99 | 104 | 236 |
+
+>| 12:00 | 78 | 115 | 97 | 88 | 96 | 109 | 239 |
+
+>| 13:00 | 81 | 122 | 97 | 98 | 101 | 115 | 242 |
+
+>| 14:00 | 83 | 127 | 104 | 92 | 96 | 110 | 244 |
+
+>| 15:00 | 83 | 126 | 104 | 88 | 92 | 110 | 248 |
+
+>| 16:00 | 83 | 127 | 99 | 90 | 99 | 109 | 251 |
+
+>| 17:00 | 79 | 181 | 135 | 121 | 129 | 151 | 251 |
+
+>| 18:00 | 80 | 174 | 122 | 113 | 132 | 158 | 240 |
+
+>| 19:00 | 127 | 159 | 145 | 176 | 137 | 103 | 282 |
+
+**See if you can spot these patterns:**
+ 
+ 1. Queues are very long on a Monday morning and Monday evening as people rush to get water.
+ 
+ 2. Wednesday has the lowest queue times, but long queues on Wednesday evening.
+ 
+ 3. People have to queue pretty much twice as long on Saturdays compared to the weekdays. It looks like people spend their Saturdays queueing for water, perhaps for the week's supply?
+
+ 4. The shortest queues are on Sundays, and this is a cultural thing. The people of Maji Ndogo prioritise family and religion, so Sundays are spent with family and friends.
+
+I built a pivot table in SQL! The thing I want you to remember today is: SQL is a set of tools we can apply. By understanding `CASE`, we could build a complex query that aggregates our data in a format that is very easy to understand.
+
+To take it one step further, I made a graph! If you copy the pivot table into a spreadsheet, you can too.
+
+![Graph_for_queue_time_maji](https://github.com/user-attachments/assets/3e655e33-bf03-44a4-af07-c3344ca74401)
+
+The colors represent the hours of the day, and each bar is the average queue time, for that specific hour and day.
+
+**Water Accessibility and infrastructure summary report**
+
+This survey aimed to identify the water sources people use and determine both the total and average number of users for each source.
+
+Additionally, it examined the duration citizens typically spend in queues to access water.
+
+So let's create a short summary report we can for **Maji_Ndogo**.
+
+# Insights
+
+ 1. Most water sources are rural.
+ 
+ 2. 44% of our people are using shared taps. 2000 people often share one tap.
+ 
+ 3. 31% of our population has water infrastructure in their homes, but within that group, 45% face non-functional systems due to issues with pipes, pumps, and reservoirs.
+ 
+ 4. 18% of our people are using wells of which, but within that, only 28% are clean..
+ 
+ 5. Our citizens often face long wait times for water, averaging more than 120 minutes.
+ 
+ 6. In terms of queues:
+
+    - Queues are very long on Saturdays.
+
+    - Queues are longer in the mornings and evenings.
+
+    - Wednesdays and Sundays have the shortest queues
+
+ # Start of our plan
+ 
+ **We have started thinking about a plan:**
+ 
+ 1. We want to focus our efforts on improving the water sources that affect the most people.
+
+    - Most people will benefit if we improve the shared taps first.
+
+    - Wells are a good source of water, but many are contaminated. Fixing this will benefit a lot of people.
+
+    - Fixing existing infrastructure will help many people. If they have running water again, they won't have to queue, thereby shorting queue times for others. So we can solve two problems at once.
+	
+ 	- Installing taps in homes will stretch our resources too thin, so for now, if the queue times are low, we won't improve that source.
+
+2. Most water sources are in rural areas. We need to ensure our teams know this as this means they will have to make these repairs/upgrades in rural areas where road conditions, supplies, and labour are harder challenges to overcome.
+
+# Conclusion
+
+**Practical Solutions**
+
+1. If communities are using **rivers**, we can dispatch trucks to those regions to provide water temporarily in the short term, while we send out crews to drill for wells, providing a more permanent solution.
+
+2. If communities are using **wells**, we can install filters to purify the water. For wells with **biological contamination**, we can **install UV filters** that kill microorganisms, and for _polluted wells_, we can install **reverse osmosis filters**. In the long term, we need to figure out why these sources are polluted.
+
+3. For **shared taps**, in the short term, we can send additional water tankers to the busiest taps, on the busiest days. We can use the queue time pivot table we made to send tankers at the busiest times. Meanwhile, we can start the work on **installing extra taps** where they are needed. According to UN standards, the maximum acceptable wait time for water is **30 minutes**. With this in mind, our aim is to install taps to get **queue times below 30 min**.
+
+4. **Shared taps** with **short queue times (< 30 min)** represent a logistical challenge to further reduce waiting times. The most effective solution, installing taps in homes, is **resource-intensive** and better suited as a **long-term goal**.
+
+5. **Addressing broken infrastructure** offers a significant impact even with just a single intervention. It is expensive to fix, but so many people can benefit from repairing one facility. For example, fixing a **reservoir or pipe** that multiple taps are connected to. We will have to find the commonly affected areas though to see where the problem actually is.
 
 
 
