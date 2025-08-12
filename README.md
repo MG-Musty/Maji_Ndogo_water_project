@@ -800,12 +800,6 @@ To filter a row we use `WHERE`, but using `CASE()` in `SELECT` can filter column
 We create separate columns for each day with a `CASE()` function.
 
 ```
-/*
-We create separate columns for each day with a CASE() function.
-Ok, so here's your challenge: Fill out the query for the rest of the days, and run it. Make sure to specify the day in the CASE() function, and the
-alias.
-*/
-
 SELECT
     TIME_FORMAT(TIME(time_of_record), '%H:00') AS hour_of_day,
 
