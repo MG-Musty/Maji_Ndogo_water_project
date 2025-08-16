@@ -368,7 +368,7 @@ SET phone_number = TRIM(phone_number);
 
 >|0 | Amara Jengo | +99637993287 | amara.jengo@ndogowater.gov | 36 Pwani Mchangani Road | Sokoto | Ilanga | Field Surveyor |
 
-2. ** Analysing locations**
+2. **Analysing locations**
 
 Looking at the location table, let’s focus on the `province_name, town_name and location_type` to understand where the water sources are in Maji Ndogo.
 
