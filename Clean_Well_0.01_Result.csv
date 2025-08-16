@@ -1,0 +1,65 @@
+source_id,date,description,pollutant_ppm,biological,results
+AkRu08936224,"2021-01-08 09:22:00","Bacteria: E. coli",0.0406458,35.0068,Clean
+AkRu06489224,"2021-01-10 09:44:00","Clean Bacteria: Giardia Lamblia",0.0897904,38.467,Clean
+SoRu38011224,"2021-01-14 15:35:00","Bacteria: E. coli",0.0425095,19.2897,Clean
+AkKi00955224,"2021-01-22 12:47:00","Bacteria: E. coli",0.0812092,40.2273,Clean
+KiHa22929224,"2021-02-06 13:54:00","Bacteria: E. coli",0.0722537,18.4482,Clean
+KiRu25473224,"2021-02-07 15:51:00","Clean Bacteria: Giardia Lamblia",0.0630094,24.4536,Clean
+HaRu17401224,"2021-03-01 13:44:00","Clean Bacteria: Giardia Lamblia",0.0649209,25.8129,Clean
+AkRu07137224,"2021-03-04 13:41:00","Clean Bacteria: Giardia Lamblia",0.0656843,18.2978,Clean
+KiRu27205224,"2021-03-13 14:17:00","Clean Bacteria: Giardia Lamblia",0.0418018,49.4281,Clean
+AkLu02307224,"2021-03-13 15:41:00","Bacteria: E. coli",0.0709682,35.203,Clean
+AkHa00514224,"2021-04-11 12:11:00","Clean Bacteria: Giardia Lamblia",0.0305404,22.0255,Clean
+AmAb09197224,"2021-05-10 14:23:00","Bacteria: E. coli",0.0738421,29.5398,Clean
+AmAm09776224,"2021-05-23 11:28:00","Clean Bacteria: Giardia Lamblia",0.0963821,13.6574,Clean
+AkRu08599224,"2021-06-24 09:36:00","Bacteria: E. coli",0.0202987,17.1466,Clean
+SoIl32894224,"2021-07-11 11:37:00","Clean Bacteria: Giardia Lamblia",0.0712408,5.44957,Clean
+AkRu07366224,"2021-07-23 11:19:00","Clean Bacteria: Giardia Lamblia",0.0969458,26.0308,Clean
+AkKi01423224,"2021-07-30 14:57:00","Bacteria: E. coli",0.012334,4.75647,Clean
+AkRu08367224,"2021-08-07 14:52:00","Bacteria: E. coli",0.0498854,41.4135,Clean
+KiHa23443224,"2021-09-05 12:34:00","Clean Bacteria: Giardia Lamblia",0.0828,13.7162,Clean
+HaSe21137224,"2021-09-20 16:57:00","Bacteria: E. coli",0.0988156,49.2078,Clean
+KiRu29323224,"2021-09-25 10:01:00","Bacteria: E. coli",0.0605767,18.7618,Clean
+AkKi00919224,"2021-10-30 09:03:00","Bacteria: E. coli",0.0510793,4.52353,Clean
+AkRu06340224,"2021-11-01 15:24:00","Clean Bacteria: Giardia Lamblia",0.051746,36.4594,Clean
+SoBa31600224,"2021-11-07 14:44:00","Bacteria: E. coli",0.0687197,4.49928,Clean
+AkRu06363224,"2021-11-15 13:36:00","Clean Bacteria: Giardia Lamblia",0.0882158,45.3731,Clean
+AkRu08749224,"2021-11-19 13:37:00","Clean Bacteria: E. coli",0.0888194,9.28085,Clean
+AkRu07066224,"2021-12-10 14:40:00","Clean Bacteria: E. coli",0.0151035,44.4652,Clean
+KiAm21996224,"2021-12-16 10:05:00","Clean Bacteria: E. coli",0.0480415,25.4174,Clean
+SoRu36080224,"2021-12-31 13:57:00","Bacteria: E. coli",0.0924292,11.9485,Clean
+AkRu05377224,"2022-01-01 10:53:00","Clean Bacteria: E. coli",0.0226614,0.613503,Clean
+HaRu20765224,"2022-02-07 12:39:00","Clean Bacteria: E. coli",0.0213831,6.95778,Clean
+AmRu13112224,"2022-02-13 14:57:00","Bacteria: E. coli",0.0832901,24.1679,Clean
+SoMa34473224,"2022-03-10 09:01:00","Clean Bacteria: E. coli",0.0745784,13.6458,Clean
+SoKo33474224,"2022-03-20 16:07:00","Clean Bacteria: E. coli",0.0687177,10.5712,Clean
+AkLu01944224,"2022-03-24 12:23:00","Bacteria: E. coli",0.0289,6.75924,Clean
+AkRu04015224,"2022-03-25 10:30:00","Bacteria: E. coli",0.0625308,3.5115,Clean
+AkHa00226224,"2022-03-26 11:53:00","Clean Bacteria: E. coli",0.0424571,39.4978,Clean
+AkRu06881224,"2022-03-28 13:37:00","Clean Bacteria: E. coli",0.0202831,33.0692,Clean
+AkLu02254224,"2022-04-25 12:51:00","Clean Bacteria: E. coli",0.0635533,16.9482,Clean
+AkRu08416224,"2022-05-29 15:59:00","Clean Bacteria: E. coli",0.0406701,27.0805,Clean
+AkRu06169224,"2022-06-11 14:32:00","Bacteria: E. coli",0.0400722,18.0006,Clean
+HaDe16475224,"2022-06-18 16:11:00","Bacteria: E. coli",0.0689293,13.741,Clean
+AkRu07663224,"2022-06-25 09:33:00","Bacteria: E. coli",0.0117428,49.5964,Clean
+SoMa34205224,"2022-07-31 13:25:00","Clean Bacteria: E. coli",0.0726217,23.892,Clean
+KiIs23482224,"2022-08-15 16:41:00","Clean Bacteria: E. coli",0.0539137,41.0842,Clean
+AmRu13252224,"2022-08-20 14:23:00","Clean Bacteria: E. coli",0.0653589,30.8643,Clean
+AkRu03813224,"2022-09-12 09:44:00","Bacteria: E. coli",0.0231938,34.6583,Clean
+KiAm22599224,"2022-09-12 13:22:00","Bacteria: E. coli",0.0584876,45.0753,Clean
+AkRu08317224,"2022-10-28 16:29:00","Bacteria: E. coli",0.0196858,42.4737,Clean
+SoIl32332224,"2022-11-07 15:14:00","Bacteria: E. coli",0.0761944,37.5657,Clean
+KiRu27297224,"2022-11-21 13:18:00","Clean Bacteria: E. coli",0.0856842,8.62509,Clean
+KiRu26929224,"2022-12-18 10:52:00","Clean Bacteria: E. coli",0.0748808,26.6541,Clean
+HaAm16042224,"2022-12-22 13:52:00","Clean Bacteria: E. coli",0.0605767,4.54755,Clean
+AkRu03107224,"2023-01-01 15:37:00","Clean Bacteria: E. coli",0.0901101,18.3118,Clean
+KiHa23111224,"2023-01-12 15:56:00","Clean Bacteria: E. coli",0.0161869,36.8748,Clean
+AkRu07715224,"2023-02-23 14:13:00","Bacteria: E. coli",0.0196031,11.8788,Clean
+AkRu03771224,"2023-02-26 12:40:00","Clean Bacteria: E. coli",0.0625017,19.7648,Clean
+AkRu04253224,"2023-02-26 13:46:00","Clean Bacteria: E. coli",0.0273811,3.08854,Clean
+AmDa11377224,"2023-03-30 15:55:00","Bacteria: E. coli",0.0346444,23.0362,Clean
+HaSe20949224,"2023-04-03 16:26:00","Clean Bacteria: E. coli",0.0458311,32.9004,Clean
+KiAm22477224,"2023-05-14 15:02:00","Clean Bacteria: E. coli",0.0568172,25.6586,Clean
+AkRu08365224,"2023-05-28 14:56:00","Clean Bacteria: E. coli",0.0826689,19.586,Clean
+AkRu04026224,"2023-06-05 16:55:00","Clean Bacteria: E. coli",0.0124892,22.9488,Clean
+KiRu29194224,"2023-06-08 09:28:00","Clean Bacteria: E. coli",0.0502865,8.40146,Clean
